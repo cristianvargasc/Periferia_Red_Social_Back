@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   backend-app:
     build:
@@ -7,10 +5,13 @@ services:
       dockerfile: Dockerfile
     container_name: red_social_backend
     restart: always
-    network_mode: "host" 
+    ports:
+      - "8080:8080"
     environment:
-      - DB_HOST=127.0.0.1
+      - DB_HOST=host.docker.internal
       - DB_PORT=5432
-      - DB_NAME=red_social_db
+      - DB_NAME=red_social
       - DB_USER=red_social_user
-      - DB_PASSWORD=red_social_password 
+      - DB_PASSWORD=red_social_password
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

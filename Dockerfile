@@ -10,7 +10,8 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # --- ETAPA 2: Ejecución ---
-FROM openjdk:17-jdk-slim AS runtime
+# Cambiamos openjdk por eclipse-temurin, que es la imagen oficial recomendada y mantenida
+FROM eclipse-temurin:17-jre-alpine AS runtime
 WORKDIR /app
 
 # Copiar el archivo .jar compilado en la etapa anterior
