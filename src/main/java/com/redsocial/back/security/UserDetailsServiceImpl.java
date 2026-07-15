@@ -9,8 +9,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * Implementación del servicio de carga de detalles de usuario.
- * Spring Security utiliza este servicio para obtener los datos del usuario
- * durante el proceso de autenticación.
+ * * durante el proceso de autenticación.
  */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -23,8 +22,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     /**
      * Carga los detalles del usuario por su nombre de usuario.
-     * Envuelve la entidad {@link Usuario} en un {@link UserDetailsImpl} compatible con Spring Security.
-     *
      * @param nombreUsuario nombre de usuario a buscar en la base de datos
      * @return detalles del usuario encontrado
      * @throws UsernameNotFoundException si no existe ningún usuario con ese nombre

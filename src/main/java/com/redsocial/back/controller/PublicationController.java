@@ -23,11 +23,6 @@ import java.util.stream.Collectors;
 /**
  * Controlador de publicaciones.
  * Gestiona la creación, listado y gestión de likes de las publicaciones de los usuarios.
- *
- * <p>IMPORTANTE: Este controlador NO debe tener @Transactional a nivel de clase ni de método.
- * Usar @Transactional en un @RestController con @EnableMethodSecurity activo provoca que
- * Spring genere un proxy CGLIB que rompe la resolución de @AuthenticationPrincipal,
- * causando respuestas 401 inesperadas. La lógica transaccional se delega al servicio.</p>
  */
 @RestController
 @RequestMapping("/api/publications")
@@ -136,8 +131,6 @@ public class PublicationController {
 
     /**
      * Alterna el like de una publicación para el usuario autenticado.
-     * Delega la lógica al {@link LikeServicio} para evitar conflictos entre
-     * @Transactional y la resolución de @AuthenticationPrincipal en Spring Security 6.
      *
      * @param detallesUsuario datos del usuario autenticado
      * @param id              identificador de la publicación
@@ -152,7 +145,6 @@ public class PublicationController {
         registroAuditoria.info("Auditoría: El usuario {} solicita alternar like para la publicación con ID {}",
                 detallesUsuario.getUsername(), id);
 
-        // Delegar al servicio que maneja el procedimiento almacenado sin @Transactional
         boolean procesado = likeServicio.alternarLike(detallesUsuario.getId(), id);
 
         if (!procesado) {

@@ -10,9 +10,6 @@ import org.springframework.stereotype.Service;
 
 /**
  * Servicio de likes.
- * Encapsula la lógica transaccional del toggle de likes,
- * separándola del controlador para evitar problemas de proxy CGLIB
- * con Spring Security en el contexto de @EnableMethodSecurity.
  */
 @Service
 public class LikeServicio {
@@ -33,11 +30,7 @@ public class LikeServicio {
 
     /**
      * Alterna el like de una publicación llamando al procedimiento almacenado
-     * {@code alternar_like} y notificando a los clientes vía WebSocket.
      *
-     * <p>NOTA: No se usa @Transactional aquí porque el procedimiento almacenado
-     * de PostgreSQL contiene COMMIT explícito y no puede ejecutarse dentro de
-     * una transacción activa de Spring.</p>
      *
      * @param usuarioId     ID del usuario que da o quita el like
      * @param publicacionId ID de la publicación objetivo
@@ -52,13 +45,13 @@ public class LikeServicio {
         registroAuditoria.info("Auditoría: Alternando like — usuario ID {} → publicación ID {}",
                 usuarioId, publicacionId);
 
-        // Llamar al procedimiento almacenado (sin transacción activa de Spring)
+        // Llamar al procedimiento almacenado
         repositorioLike.alternarLike(usuarioId.intValue(), publicacionId.intValue());
 
         // Obtener el conteo actualizado de likes tras el cambio
         long conteoActualizado = repositorioLike.countByPublicacionId(publicacionId);
 
-        // Notificar en tiempo real a los clientes suscritos vía STOMP/WebSocket
+        // Notificar en tiempo real a los clientes suscritos vía WebSocket
         plantillaMensajeria.convertAndSend("/topic/likes", new LikeEvent(publicacionId, conteoActualizado));
 
         registroAuditoria.info("Auditoría: Like alternado para publicación ID {}. Nuevo conteo: {}",
