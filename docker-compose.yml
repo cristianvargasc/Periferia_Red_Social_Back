@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  backend-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: red_social_backend
+    restart: always
+    network_mode: "host" 
+    environment:
+      - DB_HOST=127.0.0.1
+      - DB_PORT=5432
+      - DB_NAME=red_social_db
+      - DB_USER=red_social_user
+      - DB_PASSWORD=red_social_password 
